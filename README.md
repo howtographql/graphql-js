@@ -1,1 +1,1 @@
-# graphql-js
+# Hackernews Node.js Express Example

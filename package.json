@@ -1,0 +1,27 @@
+{
+  "name": "graphql-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howtographql/graphql-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/howtographql/graphql-js/issues"
+  },
+  "homepage": "https://github.com/howtographql/graphql-js#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "graphql": "^0.10.3",
+    "graphql-server-express": "^0.9.0",
+    "graphql-tools": "^1.0.0"
+  }
+}
