@@ -1,9 +1,7 @@
 # Hackernews Node.js Express Example
 
-To run it, use the following command:
+## Setup
 
-```sh
-node ./src/index.js
-```
-
-Then you can open GraphiQL to test the API locally [here](http://localhost:3000/graphiql).
+* Install dependencies using npm or yarn (e.g. `npm i`)
+* Run the server: `node ./src/index.js`
+* Open GraphiQL to test the API locally [here](http://localhost:3000/graphiql)
