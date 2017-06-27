@@ -24,9 +24,17 @@ module.exports = {
         name: data.name,
         email: data.authProvider.email.email,
         password: data.authProvider.email.password,
-      }
+      };
       const response = await Users.insert(newUser);
       return Object.assign({id: response.insertedIds[0]}, newUser);
+    },
+
+    signinUser: async (root, data, {mongo: {Users}}) => {
+      const user = await Users.findOne({email: data.email.email});
+      if (data.email.password === user.password) {
+        renameId(user);
+        return {token: `token-${user.id}`, user};
+      }
     },
   },
 };

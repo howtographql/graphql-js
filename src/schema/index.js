@@ -16,6 +16,8 @@ const typeDefs = `
     # make it easier to integrate this new server later with the frontend
     # code from previous tutorials.
     createUser(name: String!, authProvider: AuthProviderSignupData!): User
+
+    signinUser(email: AUTH_PROVIDER_EMAIL): SigninPayload!
   }
 
   type User {
@@ -32,6 +34,11 @@ const typeDefs = `
   input AUTH_PROVIDER_EMAIL {
     email: String!
     password: String!
+  }
+
+  type SigninPayload {
+    token: String
+    user: User
   }
 
   type Link {
