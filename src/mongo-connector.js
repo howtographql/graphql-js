@@ -14,5 +14,8 @@ const MONGO_URL = 'mongodb://localhost:27017/hackernews';
 module.exports = async () => {
   // Connecting to MongoDB is an async operation, so we need to wait here.
   const db = await MongoClient.connect(MONGO_URL);
-  return {Links: db.collection('links')};
+  return {
+    Links: db.collection('links'),
+    Users: db.collection('users'),
+  };
 }
