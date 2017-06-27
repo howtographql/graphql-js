@@ -8,23 +8,33 @@ const bodyParser = require('body-parser');
 const {graphqlExpress, graphiqlExpress} = require('graphql-server-express');
 
 const schema = require('./schema');
-const connectMongo = require('./mongo-connector')
+const connectMongo = require('./mongo-connector');
+const {authenticate} = require('./authentication');
 
 const start = async () => {
-  const mongo = await connectMongo()
+  const mongo = await connectMongo();
   var app = express();
-  app.use('/graphql', bodyParser.json(), graphqlExpress({
-    context: {mongo}, // This context object is passed to all resolvers.
-    schema
-  }));
+
+  const buildOptions = async (req, res) => {
+    const user = await authenticate(req, mongo.Users);
+    return {
+      context: {mongo, user}, // This context object is passed to all resolvers.
+      schema,
+    };
+  };
+  app.use('/graphql', bodyParser.json(), graphqlExpress(buildOptions));
+
   app.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
+
+    // Replace this e-mail with another to test with another user in your db.
+    passHeader: `'Authorization': 'bearer token-maira.bello@vtex.com'`,
   }));
 
-  const PORT = 3000
+  const PORT = 3000;
   app.listen(PORT, () => {
     console.log(`Hackernews GraphQL server running on port ${PORT}.`)
   });
-}
+};
 
-start()
+start();

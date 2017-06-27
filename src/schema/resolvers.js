@@ -33,7 +33,7 @@ module.exports = {
       const user = await Users.findOne({email: data.email.email});
       if (data.email.password === user.password) {
         renameId(user);
-        return {token: `token-${user.id}`, user};
+        return {token: `token-${user.email}`, user};
       }
     },
   },
