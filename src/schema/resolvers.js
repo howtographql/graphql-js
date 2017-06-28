@@ -15,7 +15,10 @@ module.exports = {
     },
 
     createVote: async (root, data, {mongo: {Votes}, user}) => {
-      const newVote = Object.assign({userId: user && user._id}, data);
+      const newVote = {
+        userId: user && user._id,
+        linkId: new ObjectID(data.linkId),
+      };
       const response = await Votes.insert(newVote);
       return Object.assign({id: response.insertedIds[0]}, newVote);
     },
@@ -44,9 +47,12 @@ module.exports = {
     // Convert the "_id" field from MongoDB to "id" from the schema.
     id: root => root._id || root.id,
 
-    postedBy: async (root, data, {mongo: {Users}}) => {
-      const {postedById} = root
-      return Users.findOne({_id: new ObjectID(postedById)})
+    postedBy: async ({postedById}, data, {mongo: {Users}}) => {
+      return await Users.findOne({_id: postedById});
+    },
+
+    votes: async ({_id}, data, {mongo: {Votes}}) => {
+      return await Votes.find({linkId: _id}).toArray();
     },
   },
 
@@ -60,11 +66,11 @@ module.exports = {
     id: root => root._id || root.id,
 
     user: async ({userId}, data, {mongo: {Users}}) => {
-      return Users.findOne({_id: new ObjectID(userId)})
+      return await Users.findOne({_id: userId});
     },
 
     link: async ({linkId}, data, {mongo: {Links}}) => {
-      return Links.findOne({_id: new ObjectID(linkId)})
+      return await Links.findOne({_id: linkId});
     },
   },
 };
