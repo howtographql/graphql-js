@@ -3,29 +3,19 @@ const {ObjectID} = require('mongodb')
 module.exports = {
   Query: {
     allLinks: async (root, data, {mongo: {Links, Users}}) => {
-      const links = await Links.find({}).toArray();
-      for (let i = 0; i < links.length; i++) {
-        links[i].postedBy = await Users.findOne(
-          {_id: new ObjectID(links[i].postedById)},
-        );
-      }
-      return links;
+      return await Links.find({}).toArray();
     },
   },
 
   Mutation: {
     createLink: async (root, data, {mongo: {Links}, user}) => {
-      const response = await Links.insert(
-        Object.assign({postedById: user && user.id}, data),
-      );
-      return Object.assign(
-        {id: response.insertedIds[0], postedBy: user},
-        data,
-      );
+      const newLink = Object.assign({postedById: user && user._id}, data)
+      const response = await Links.insert(newLink);
+      return Object.assign({id: response.insertedIds[0]}, newLink);
     },
 
     createVote: async (root, data, {mongo: {Votes}, user}) => {
-      const newVote = Object.assign({userId: user && user.id}, data);
+      const newVote = Object.assign({userId: user && user._id}, data);
       const response = await Votes.insert(newVote);
       return Object.assign({id: response.insertedIds[0]}, newVote);
     },
@@ -53,6 +43,11 @@ module.exports = {
   Link: {
     // Convert the "_id" field from MongoDB to "id" from the schema.
     id: root => root._id || root.id,
+
+    postedBy: async (root, data, {mongo: {Users}}) => {
+      const {postedById} = root
+      return Users.findOne({_id: new ObjectID(postedById)})
+    },
   },
 
   User: {
@@ -64,12 +59,12 @@ module.exports = {
     // Convert the "_id" field from MongoDB to "id" from the schema.
     id: root => root._id || root.id,
 
-    user: async (root, data, {mongo: {Users}}) => {
-      return Users.findOne({_id: new ObjectID(root.userId)})
+    user: async ({userId}, data, {mongo: {Users}}) => {
+      return Users.findOne({_id: new ObjectID(userId)})
     },
 
-    link: async (root, data, {mongo: {Links}}) => {
-      return Links.findOne({_id: new ObjectID(root.linkId)})
+    link: async ({linkId}, data, {mongo: {Links}}) => {
+      return Links.findOne({_id: new ObjectID(linkId)})
     },
   },
 };
