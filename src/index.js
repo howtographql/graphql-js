@@ -28,7 +28,7 @@ const start = async () => {
     endpointURL: '/graphql',
 
     // Replace this e-mail with another to test with another user in your db.
-    passHeader: `'Authorization': 'bearer token-maira.bello@vtex.com'`,
+    passHeader: `'Authorization': 'bearer token-foo@bar.com'`,
   }));
 
   const PORT = 3000;

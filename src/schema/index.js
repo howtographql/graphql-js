@@ -45,6 +45,7 @@ const typeDefs = `
     id: ID!
     url: String!
     description: String!
+    postedBy: User
   }
 `;
 
