@@ -24,6 +24,12 @@ module.exports = {
       );
     },
 
+    createVote: async (root, data, {mongo: {Votes}, user}) => {
+      const newVote = Object.assign({userId: user && user.id}, data);
+      const response = await Votes.insert(newVote);
+      return Object.assign({id: response.insertedIds[0]}, newVote);
+    },
+
     createUser: async (root, data, {mongo: {Users}}) => {
       // You need to convert the given arguments into the format for the
       // `User` type, grabbing email and password from the "authProivder".
@@ -52,5 +58,18 @@ module.exports = {
   User: {
     // Convert the "_id" field from MongoDB to "id" from the schema.
     id: root => root._id || root.id,
+  },
+
+  Vote: {
+    // Convert the "_id" field from MongoDB to "id" from the schema.
+    id: root => root._id || root.id,
+
+    user: async (root, data, {mongo: {Users}}) => {
+      return Users.findOne({_id: new ObjectID(root.userId)})
+    },
+
+    link: async (root, data, {mongo: {Links}}) => {
+      return Links.findOne({_id: new ObjectID(root.linkId)})
+    },
   },
 };

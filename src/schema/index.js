@@ -9,6 +9,7 @@ const typeDefs = `
 
   type Mutation {
     createLink(url: String!, description: String!): Link
+    createVote(linkId: ID!): Vote
 
     # Note that this mutation could receive the email and password directly
     # as arguments, with no problem. You're just using this "authProvider"
@@ -46,6 +47,12 @@ const typeDefs = `
     url: String!
     description: String!
     postedBy: User
+  }
+
+  type Vote {
+    id: ID!
+    user: User!
+    link: Link!
   }
 `;
 
