@@ -10,6 +10,7 @@ const {graphqlExpress, graphiqlExpress} = require('graphql-server-express');
 const schema = require('./schema');
 const connectMongo = require('./mongo-connector');
 const {authenticate} = require('./authentication');
+const buildDataloaders = require('./dataloaders');
 
 const start = async () => {
   const mongo = await connectMongo();
@@ -18,7 +19,12 @@ const start = async () => {
   const buildOptions = async (req, res) => {
     const user = await authenticate(req, mongo.Users);
     return {
-      context: {mongo, user}, // This context object is passed to all resolvers.
+      // This context object is passed to all resolvers.
+      context: {
+        dataloaders: buildDataloaders(mongo),
+        mongo,
+        user
+      },
       schema,
     };
   };
