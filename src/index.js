@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 // for you, based on your schema.
 const {graphqlExpress, graphiqlExpress} = require('graphql-server-express');
 
-const {PubSub} = require('graphql-subscriptions');
+const {execute, subscribe} = require('graphql');
+const {createServer} = require('http');
+const {SubscriptionServer} = require('subscriptions-transport-ws');
 
 const schema = require('./schema');
 const connectMongo = require('./mongo-connector');
@@ -17,7 +19,7 @@ const formatError = require('./formatError');
 
 const start = async () => {
   const mongo = await connectMongo();
-  var app = express();
+  const app = express();
 
   const buildOptions = async (req, res) => {
     const user = await authenticate(req, mongo.Users);
@@ -26,7 +28,6 @@ const start = async () => {
       context: {
         dataloaders: buildDataloaders(mongo),
         mongo,
-        pubsub: new PubSub(),
         user,
       },
       formatError,
@@ -35,15 +36,22 @@ const start = async () => {
   };
   app.use('/graphql', bodyParser.json(), graphqlExpress(buildOptions));
 
+  const PORT = 3000;
   app.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
 
     // Replace this e-mail with another to test with another user in your db.
     passHeader: `'Authorization': 'bearer token-foo@bar.com'`,
+
+    subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`,
   }));
 
-  const PORT = 3000;
-  app.listen(PORT, () => {
+  const server = createServer(app);
+  server.listen(PORT, () => {
+    new SubscriptionServer(
+      {execute, subscribe, schema},
+      {server, path: '/subscriptions'},
+    );
     console.log(`Hackernews GraphQL server running on port ${PORT}.`)
   });
 };
