@@ -59,6 +59,10 @@ module.exports = {
   User: {
     // Convert the "_id" field from MongoDB to "id" from the schema.
     id: root => root._id || root.id,
+
+    votes: async ({_id}, data, {mongo: {Votes}}) => {
+      return await Votes.find({userId: _id}).toArray();
+    },
   },
 
   Vote: {
