@@ -24,11 +24,20 @@ module.exports = {
   },
 
   Mutation: {
-    createLink: async (root, data, {mongo: {Links}, user}) => {
+    createLink: async (root, data, {mongo: {Links}, pubsub, user}) => {
       assertValidLink(data);
       const newLink = Object.assign({postedById: user && user._id}, data)
       const response = await Links.insert(newLink);
-      return Object.assign({id: response.insertedIds[0]}, newLink);
+
+      newLink.id = response.insertedIds[0]
+      pubsub.publish('Link', {
+        Link: {
+          mutation: 'CREATED',
+          node: newLink,
+        }
+      });
+
+      return newLink;
     },
 
     createVote: async (root, data, {mongo: {Votes}, user}) => {
@@ -56,6 +65,15 @@ module.exports = {
       const user = await Users.findOne({email: data.email.email});
       if (data.email.password === user.password) {
         return {token: `token-${user.email}`, user};
+      }
+    },
+  },
+
+  Subscription: {
+    Link: {
+      subscribe: (root, data, {pubsub}) => {
+        console.log('subscribing to Link', root, data);
+        return pubsub.asyncIterator('Link');
       }
     },
   },

@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 // for you, based on your schema.
 const {graphqlExpress, graphiqlExpress} = require('graphql-server-express');
 
+const {PubSub} = require('graphql-subscriptions');
+
 const schema = require('./schema');
 const connectMongo = require('./mongo-connector');
 const {authenticate} = require('./authentication');
@@ -24,7 +26,8 @@ const start = async () => {
       context: {
         dataloaders: buildDataloaders(mongo),
         mongo,
-        user
+        pubsub: new PubSub(),
+        user,
       },
       formatError,
       schema,

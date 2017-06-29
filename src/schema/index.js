@@ -68,7 +68,6 @@ const typeDefs = `
   type LinkSubscriptionPayload {
     mutation: _ModelMutationType!
     node: Link
-    updatedFields: [String!]
   }
 
   enum _ModelMutationType {
