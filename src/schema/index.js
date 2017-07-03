@@ -29,7 +29,6 @@ const typeDefs = `
     id: ID!
     name: String!
     email: String
-    password: String
     votes: [Vote!]!
   }
 
