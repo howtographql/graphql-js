@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 // This package will handle GraphQL server requests and responses
 // for you, based on your schema.
-const {graphqlExpress, graphiqlExpress} = require('graphql-server-express');
+const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 
 const {execute, subscribe} = require('graphql');
 const {createServer} = require('http');
