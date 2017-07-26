@@ -48,7 +48,7 @@ const start = async () => {
 
   const server = createServer(app);
   server.listen(PORT, () => {
-    new SubscriptionServer(
+    SubscriptionServer.create(
       {execute, subscribe, schema},
       {server, path: '/subscriptions'},
     );
