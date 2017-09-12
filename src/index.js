@@ -1,21 +1,21 @@
-const express = require('express');
+const express = require("express");
 
 // This package automatically parses JSON requests.
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 // This package will handle GraphQL server requests and responses
 // for you, based on your schema.
-const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
+const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 
-const {execute, subscribe} = require('graphql');
-const {createServer} = require('http');
-const {SubscriptionServer} = require('subscriptions-transport-ws');
+const { execute, subscribe } = require("graphql");
+const { createServer } = require("http");
+const { SubscriptionServer } = require("subscriptions-transport-ws");
 
-const schema = require('./schema');
-const connectMongo = require('./mongo-connector');
-const {authenticate} = require('./authentication');
-const buildDataloaders = require('./dataloaders');
-const formatError = require('./formatError');
+const schema = require("./schema");
+const connectMongo = require("./mongo-connector");
+const { authenticate } = require("./authentication");
+const buildDataloaders = require("./dataloaders");
+const formatError = require("./formatError");
 
 const start = async () => {
   const mongo = await connectMongo();
@@ -28,31 +28,34 @@ const start = async () => {
       context: {
         dataloaders: buildDataloaders(mongo),
         mongo,
-        user,
+        user
       },
       formatError,
-      schema,
+      schema
     };
   };
-  app.use('/graphql', bodyParser.json(), graphqlExpress(buildOptions));
+  app.use("/graphql", bodyParser.json(), graphqlExpress(buildOptions));
 
   const PORT = 3000;
-  app.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql',
+  app.use(
+    "/graphiql",
+    graphiqlExpress({
+      endpointURL: "/graphql",
 
-    // Replace this e-mail with another to test with another user in your db.
-    passHeader: `'Authorization': 'bearer token-foo@bar.com'`,
+      // Replace this e-mail with another to test with another user in your db.
+      passHeader: `'Authorization': 'bearer token-foo@bar.com'`,
 
-    subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`,
-  }));
+      subscriptionsEndpoint: `ws://localhost:${PORT}/subscriptions`
+    })
+  );
 
   const server = createServer(app);
   server.listen(PORT, () => {
     SubscriptionServer.create(
-      {execute, subscribe, schema},
-      {server, path: '/subscriptions'},
+      { execute, subscribe, schema },
+      { server, path: "/subscriptions" }
     );
-    console.log(`Hackernews GraphQL server running on port ${PORT}.`)
+    console.log(`Hackernews GraphQL server running on port ${PORT}.`);
   });
 };
 
