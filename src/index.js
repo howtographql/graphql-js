@@ -2,11 +2,13 @@ const { GraphQLServer } = require('graphql-yoga')
 const { Graphcool } = require('graphcool-binding')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
+const Subscription = require('./resolvers/Subscription')
 const AuthPayload = require('./resolvers/AuthPayload')
 
 const resolvers = {
   Query,
   Mutation,
+  Subscription,
   AuthPayload,
 }
 

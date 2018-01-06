@@ -1,4 +1,4 @@
-# import LinkFilter, Link, Vote from './generated/database.graphql'
+# import Link, Vote, LinkSubscriptionPayload, VoteSubscriptionPayload from './generated/database.graphql'
 
 type Query {
   feed(filter: String, skip: Int, first: Int): [Link!]!
@@ -12,8 +12,8 @@ type Mutation {
 }
 
 type Subscription {
-  newLink: Link!
-  newVote: Vote!
+  newLink: LinkSubscriptionPayload
+  newVote: VoteSubscriptionPayload
 }
 
 type AuthPayload {

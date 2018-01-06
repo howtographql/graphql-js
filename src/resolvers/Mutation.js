@@ -21,12 +21,15 @@ module.exports = {
       throw new Error(`Already voted for link: ${linkId}`)
     }
 
-    return ctx.db.mutation.createLink({
-      data: {
-        user: { connect: { id: userId } },
-        link: { connect: { id: linkId } },
+    return ctx.db.mutation.createVote(
+      {
+        data: {
+          user: { connect: { id: userId } },
+          link: { connect: { id: linkId } },
+        },
       },
-    })
+      info,
+    )
   },
 
   async signup(parent, args, ctx, info) {
