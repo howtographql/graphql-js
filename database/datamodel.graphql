@@ -1,0 +1,21 @@
+type User {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  votes: [Vote!]!
+}
+
+type Link {
+  id: ID! @unique
+  url: String!
+  description: String!
+  postedBy: User
+  votes: [Vote!]!
+}
+
+type Vote {
+  id: ID! @unique
+  user: User!
+  link: Link!
+}

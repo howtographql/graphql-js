@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,20 +13,18 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/howtographql/graphql-js/issues"
   },
   "homepage": "https://github.com/howtographql/graphql-js#readme",
   "dependencies": {
-    "apollo-server-express": "^1.0.4",
-    "body-parser": "^1.17.2",
-    "dataloader": "^1.3.0",
-    "express": "^4.15.3",
-    "graphql": "^0.10.3",
-    "graphql-subscriptions": "^0.4.3",
-    "graphql-tools": "^1.0.0",
-    "mongodb": "^2.2.29",
-    "subscriptions-transport-ws": "^0.7.3"
+    "bcryptjs": "^2.4.3",
+    "graphcool-binding": "^1.3.2",
+    "graphql-yoga": "^1.1.2",
+    "jsonwebtoken": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.8"
   }
 }

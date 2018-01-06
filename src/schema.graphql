@@ -1,4 +1,4 @@
-# import LinkFilter from './generated/database.graphql'
+# import LinkFilter, Link, Vote from './generated/database.graphql'
 
 type Query {
   feed(filter: String, skip: Int, first: Int): [Link!]!
@@ -24,20 +24,6 @@ type AuthPayload {
 type User {
   id: ID!
   name: String!
-  email: String
+  email: String! @unique
   votes: [Vote!]!
-}
-
-type Link {
-  id: ID!
-  url: String!
-  description: String!
-  postedBy: User
-  votes: [Vote!]!
-}
-
-type Vote {
-  id: ID!
-  user: User!
-  link: Link!
 }
