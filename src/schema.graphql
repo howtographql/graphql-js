@@ -1,0 +1,43 @@
+# import LinkFilter from './generated/database.graphql'
+
+type Query {
+  feed(filter: String, skip: Int, first: Int): [Link!]!
+}
+
+type Mutation {
+  post(url: String!, description: String!): Link
+  vote(linkId: ID!): Vote
+  signup(name: String!, email: String!, password: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+}
+
+type Subscription {
+  newLink: Link!
+  newVote: Vote!
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String
+  votes: [Vote!]!
+}
+
+type Link {
+  id: ID!
+  url: String!
+  description: String!
+  postedBy: User
+  votes: [Vote!]!
+}
+
+type Vote {
+  id: ID!
+  user: User!
+  link: Link!
+}
