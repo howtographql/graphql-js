@@ -7,8 +7,9 @@
 
 type Link implements Node {
   id: ID!
-  url: String!
+  createdAt: DateTime!
   description: String!
+  url: String!
   postedBy(where: UserWhereInput): User
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
 }
@@ -18,13 +19,14 @@ type User implements Node {
   name: String!
   email: String!
   password: String!
+  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
 }
 
 type Vote implements Node {
   id: ID!
-  user(where: UserWhereInput): User!
   link(where: LinkWhereInput): Link!
+  user(where: UserWhereInput): User!
 }
 
 
@@ -36,16 +38,23 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 type LinkConnection {
   pageInfo: PageInfo!
   edges: [LinkEdge]!
 }
 
 input LinkCreateInput {
-  url: String!
   description: String!
-  postedBy: UserCreateOneInput
+  url: String!
+  postedBy: UserCreateOneWithoutLinksInput
   votes: VoteCreateManyWithoutLinkInput
+}
+
+input LinkCreateManyWithoutPostedByInput {
+  create: [LinkCreateWithoutPostedByInput!]
+  connect: [LinkWhereUniqueInput!]
 }
 
 input LinkCreateOneWithoutVotesInput {
@@ -53,10 +62,16 @@ input LinkCreateOneWithoutVotesInput {
   connect: LinkWhereUniqueInput
 }
 
-input LinkCreateWithoutVotesInput {
-  url: String!
+input LinkCreateWithoutPostedByInput {
   description: String!
-  postedBy: UserCreateOneInput
+  url: String!
+  votes: VoteCreateManyWithoutLinkInput
+}
+
+input LinkCreateWithoutVotesInput {
+  description: String!
+  url: String!
+  postedBy: UserCreateOneWithoutLinksInput
 }
 
 type LinkEdge {
@@ -67,20 +82,21 @@ type LinkEdge {
 enum LinkOrderByInput {
   id_ASC
   id_DESC
-  url_ASC
-  url_DESC
-  description_ASC
-  description_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  description_ASC
+  description_DESC
+  url_ASC
+  url_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type LinkPreviousValues {
   id: ID!
-  url: String!
+  createdAt: DateTime!
   description: String!
+  url: String!
 }
 
 type LinkSubscriptionPayload {
@@ -101,10 +117,19 @@ input LinkSubscriptionWhereInput {
 }
 
 input LinkUpdateInput {
-  url: String
   description: String
-  postedBy: UserUpdateOneInput
+  url: String
+  postedBy: UserUpdateOneWithoutLinksInput
   votes: VoteUpdateManyWithoutLinkInput
+}
+
+input LinkUpdateManyWithoutPostedByInput {
+  create: [LinkCreateWithoutPostedByInput!]
+  connect: [LinkWhereUniqueInput!]
+  disconnect: [LinkWhereUniqueInput!]
+  delete: [LinkWhereUniqueInput!]
+  update: [LinkUpdateWithoutPostedByInput!]
+  upsert: [LinkUpsertWithoutPostedByInput!]
 }
 
 input LinkUpdateOneWithoutVotesInput {
@@ -116,15 +141,32 @@ input LinkUpdateOneWithoutVotesInput {
   upsert: LinkUpsertWithoutVotesInput
 }
 
-input LinkUpdateWithoutVotesDataInput {
-  url: String
+input LinkUpdateWithoutPostedByDataInput {
   description: String
-  postedBy: UserUpdateOneInput
+  url: String
+  votes: VoteUpdateManyWithoutLinkInput
+}
+
+input LinkUpdateWithoutPostedByInput {
+  where: LinkWhereUniqueInput!
+  data: LinkUpdateWithoutPostedByDataInput!
+}
+
+input LinkUpdateWithoutVotesDataInput {
+  description: String
+  url: String
+  postedBy: UserUpdateOneWithoutLinksInput
 }
 
 input LinkUpdateWithoutVotesInput {
   where: LinkWhereUniqueInput!
   data: LinkUpdateWithoutVotesDataInput!
+}
+
+input LinkUpsertWithoutPostedByInput {
+  where: LinkWhereUniqueInput!
+  update: LinkUpdateWithoutPostedByDataInput!
+  create: LinkCreateWithoutPostedByInput!
 }
 
 input LinkUpsertWithoutVotesInput {
@@ -150,20 +192,14 @@ input LinkWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  url: String
-  url_not: String
-  url_in: [String!]
-  url_not_in: [String!]
-  url_lt: String
-  url_lte: String
-  url_gt: String
-  url_gte: String
-  url_contains: String
-  url_not_contains: String
-  url_starts_with: String
-  url_not_starts_with: String
-  url_ends_with: String
-  url_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   description: String
   description_not: String
   description_in: [String!]
@@ -178,6 +214,20 @@ input LinkWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
   postedBy: UserWhereInput
   votes_every: VoteWhereInput
   votes_some: VoteWhereInput
@@ -191,25 +241,24 @@ input LinkWhereUniqueInput {
 scalar Long
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
-  createLink(data: LinkCreateInput!): Link!
   createVote(data: VoteCreateInput!): Vote!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
+  createLink(data: LinkCreateInput!): Link!
+  createUser(data: UserCreateInput!): User!
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
-  deleteUser(where: UserWhereUniqueInput!): User
-  deleteLink(where: LinkWhereUniqueInput!): Link
+  updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteVote(where: VoteWhereUniqueInput!): Vote
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertLink(where: LinkWhereUniqueInput!, create: LinkCreateInput!, update: LinkUpdateInput!): Link!
+  deleteLink(where: LinkWhereUniqueInput!): Link
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertVote(where: VoteWhereUniqueInput!, create: VoteCreateInput!, update: VoteUpdateInput!): Vote!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
-  updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput!): BatchPayload!
+  upsertLink(where: LinkWhereUniqueInput!, create: LinkCreateInput!, update: LinkUpdateInput!): Link!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyVotes(data: VoteUpdateInput!, where: VoteWhereInput!): BatchPayload!
-  deleteManyUsers(where: UserWhereInput!): BatchPayload!
-  deleteManyLinks(where: LinkWhereInput!): BatchPayload!
+  updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput!): BatchPayload!
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
   deleteManyVotes(where: VoteWhereInput!): BatchPayload!
-  resetData: Boolean
+  deleteManyLinks(where: LinkWhereInput!): BatchPayload!
+  deleteManyUsers(where: UserWhereInput!): BatchPayload!
 }
 
 enum MutationType {
@@ -230,22 +279,22 @@ type PageInfo {
 }
 
 type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
-  user(where: UserWhereUniqueInput!): User
-  link(where: LinkWhereUniqueInput!): Link
+  links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   vote(where: VoteWhereUniqueInput!): Vote
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
+  link(where: LinkWhereUniqueInput!): Link
+  user(where: UserWhereUniqueInput!): User
   votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
+  linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   node(id: ID!): Node
 }
 
 type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
   vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
+  link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type UserConnection {
@@ -257,11 +306,12 @@ input UserCreateInput {
   name: String!
   email: String!
   password: String!
+  links: LinkCreateManyWithoutPostedByInput
   votes: VoteCreateManyWithoutUserInput
 }
 
-input UserCreateOneInput {
-  create: UserCreateInput
+input UserCreateOneWithoutLinksInput {
+  create: UserCreateWithoutLinksInput
   connect: UserWhereUniqueInput
 }
 
@@ -270,10 +320,18 @@ input UserCreateOneWithoutVotesInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutLinksInput {
+  name: String!
+  email: String!
+  password: String!
+  votes: VoteCreateManyWithoutUserInput
+}
+
 input UserCreateWithoutVotesInput {
   name: String!
   email: String!
   password: String!
+  links: LinkCreateManyWithoutPostedByInput
 }
 
 type UserEdge {
@@ -324,14 +382,17 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  links: LinkUpdateManyWithoutPostedByInput
   votes: VoteUpdateManyWithoutUserInput
 }
 
-input UserUpdateOneInput {
-  create: UserCreateInput
+input UserUpdateOneWithoutLinksInput {
+  create: UserCreateWithoutLinksInput
   connect: UserWhereUniqueInput
   disconnect: UserWhereUniqueInput
   delete: UserWhereUniqueInput
+  update: UserUpdateWithoutLinksInput
+  upsert: UserUpsertWithoutLinksInput
 }
 
 input UserUpdateOneWithoutVotesInput {
@@ -343,15 +404,34 @@ input UserUpdateOneWithoutVotesInput {
   upsert: UserUpsertWithoutVotesInput
 }
 
+input UserUpdateWithoutLinksDataInput {
+  name: String
+  email: String
+  password: String
+  votes: VoteUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutLinksInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutLinksDataInput!
+}
+
 input UserUpdateWithoutVotesDataInput {
   name: String
   email: String
   password: String
+  links: LinkUpdateManyWithoutPostedByInput
 }
 
 input UserUpdateWithoutVotesInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutVotesDataInput!
+}
+
+input UserUpsertWithoutLinksInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutLinksDataInput!
+  create: UserCreateWithoutLinksInput!
 }
 
 input UserUpsertWithoutVotesInput {
@@ -419,6 +499,9 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  links_every: LinkWhereInput
+  links_some: LinkWhereInput
+  links_none: LinkWhereInput
   votes_every: VoteWhereInput
   votes_some: VoteWhereInput
   votes_none: VoteWhereInput
@@ -435,8 +518,8 @@ type VoteConnection {
 }
 
 input VoteCreateInput {
-  user: UserCreateOneWithoutVotesInput!
   link: LinkCreateOneWithoutVotesInput!
+  user: UserCreateOneWithoutVotesInput!
 }
 
 input VoteCreateManyWithoutLinkInput {
@@ -493,8 +576,8 @@ input VoteSubscriptionWhereInput {
 }
 
 input VoteUpdateInput {
-  user: UserUpdateOneWithoutVotesInput
   link: LinkUpdateOneWithoutVotesInput
+  user: UserUpdateOneWithoutVotesInput
 }
 
 input VoteUpdateManyWithoutLinkInput {
@@ -562,8 +645,8 @@ input VoteWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  user: UserWhereInput
   link: LinkWhereInput
+  user: UserWhereInput
 }
 
 input VoteWhereUniqueInput {

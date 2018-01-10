@@ -1,6 +1,6 @@
-const { getUserId } = require('../utils')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { APP_SECRET, getUserId } = require('../utils')
 
 function post(parent, { url, description }, ctx, info) {
   const userId = getUserId(ctx)
@@ -16,8 +16,10 @@ async function signup(parent, args, ctx, info) {
     data: { ...args, password },
   })
 
+  const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
   return {
-    token: jwt.sign({ userId: user.id }, 'replace-this-jwt-secret'),
+    token,
     user,
   }
 }
@@ -34,7 +36,7 @@ async function login(parent, args, ctx, info) {
   }
 
   return {
-    token: jwt.sign({ userId: user.id }, 'replace-this-jwt-secret'),
+    token: jwt.sign({ userId: user.id }, APP_SECRET),
     user,
   }
 }

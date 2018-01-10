@@ -1,19 +1,8 @@
 mutation {
-  link1: createLink(
-    data: {
-      description: "The coolest GraphQL backend 😎"
-      url: "https://www.graph.cool"
-    }
-  ) {
-    id
-  }
-
-  link2: createLink(
-    data: {
-      description: "The best GraphQL client"
-      url: "http://dev.apollodata.com/"
-    }
-  ) {
+  createLink(data: {
+    url: "http://asd.asd",
+    description: "asdasd"
+  }) {
     id
   }
 }

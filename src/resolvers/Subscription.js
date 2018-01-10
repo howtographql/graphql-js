@@ -1,15 +1,18 @@
+const newLink = {
+  subscribe: (parent, args, ctx, info) => {
+    console.log(`new link resolver`)
+    return ctx.db.subscription.link({}, info)
+  },
+}
+
+const newVote = {
+  subscribe: (parent, args, ctx, info) => {
+    console.log(`new vote resolver`)
+    return ctx.db.subscription.vote({}, info)
+  },
+}
+
 module.exports = {
-  newLink: {
-    subscribe(parent, args, ctx, info) {
-      return ctx.db.subscription.link(
-        { where: { mutation_in: ['CREATED'] } },
-        info,
-      )
-    },
-  },
-  newVote: {
-    subscribe(parent, args, ctx, info) {
-      return ctx.db.subscription.vote({}, info)
-    },
-  },
+  newLink,
+  newVote,
 }

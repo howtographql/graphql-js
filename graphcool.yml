@@ -1,8 +1,16 @@
-service: graphql-js
+# the name for the service (will be part of the service's HTTP endpoint)
+service: hackernews-node-02
+
+# the cluster and stage the service is deployed to
 stage: dev
 cluster: local
-secret: my-secret
 
+# to disable authentication:
+# disableAuth: true
+secret: mysecret123
+
+# the file path pointing to your data model
 datamodel: database/datamodel.graphql
+
 seed:
   import: database/seed.graphql

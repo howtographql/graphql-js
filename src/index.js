@@ -3,13 +3,13 @@ const { Graphcool } = require('graphcool-binding')
 const Query = require('./resolvers/Query')
 const Mutation = require('./resolvers/Mutation')
 const Subscription = require('./resolvers/Subscription')
-const AuthPayload = require('./resolvers/AuthPayload')
+const Feed = require('./resolvers/Feed')
 
 const resolvers = {
   Query,
   Mutation,
   Subscription,
-  AuthPayload,
+  Feed,
 }
 
 const server = new GraphQLServer({
@@ -18,13 +18,11 @@ const server = new GraphQLServer({
   context: req => ({
     ...req,
     db: new Graphcool({
-      typeDefs: './src/generated/database.graphql',
-      endpoint: 'http://localhost:60000/graphql-js/dev',
-      secret: 'my-secret',
+      typeDefs: 'src/generated/database.graphql',
+      endpoint: 'http://localhost:60000/hackernews-node-02/dev',
+      secret: 'mysecret123',
     }),
   }),
 })
 
-server.start({}, () =>
-  console.log('Server is running on http://localhost:4000'),
-)
+server.start(() => console.log('Server is running on http://localhost:4000'))
