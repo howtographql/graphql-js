@@ -2,8 +2,4 @@
 
 ## Usage
 
-```
-cd graphql-js
-yarn install
-yarn start
-```
+See https://www.howtographql.com/graphql-js/1-getting-started/
