@@ -55,7 +55,7 @@ const server = new GraphQLServer({
 })
 ```
 
-Note that the part `public-hillcloak-flier-952361` of the URL is unique to your service.
+Note that the part `public-hillcloak-flier-952361` of the URL is unique to _your_ service.
 
 ### 4. Start the server & open Playground
 
