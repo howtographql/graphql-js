@@ -1,9 +1,8 @@
 # the name for the service (will be part of the service's HTTP endpoint)
-service: hackernews-node-02
+service: hackernews-graphql-js
 
 # the cluster and stage the service is deployed to
 stage: dev
-cluster: local
 
 # to disable authentication:
 # disableAuth: true
@@ -12,5 +11,4 @@ secret: mysecret123
 # the file path pointing to your data model
 datamodel: datamodel.graphql
 
-seed:
-  import: seed.graphql
+cluster: public-hillcloak-flier-952261/prisma-eu1
