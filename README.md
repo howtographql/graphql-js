@@ -62,5 +62,6 @@ Note that the part `public-hillcloak-flier-952361` of the URL is unique to _your
 To interact with the API in a GraphQL Playground, all you need to do is execute the `dev` script defined in `package.json`:
 
 ```sh
+yarn install
 yarn dev
 ```
