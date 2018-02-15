@@ -4,7 +4,7 @@
     "start": "node src/index.js",
     "dev": "npm-run-all --parallel start playground",
     "playground": "graphql playground",
-        "prisma": "prisma"
+    "prisma": "prisma"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
