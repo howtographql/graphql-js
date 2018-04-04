@@ -1,12 +1,5 @@
-type Vote {
-  id: ID! @unique
-  link: Link!  
-  user: User!
-}
-
 type Link {
   id: ID! @unique
-  createdAt: DateTime!
   description: String!
   url: String!
   postedBy: User
@@ -20,4 +13,10 @@ type User {
   password: String!
   links: [Link!]!
   votes: [Vote!]!
+}
+
+type Vote {
+  id: ID! @unique
+  link: Link!  
+  user: User!
 }
