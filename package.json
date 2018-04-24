@@ -16,6 +16,7 @@
     "prisma-binding": "^1.5.16"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.2"
+    "npm-run-all": "^4.1.2",
+    "prisma": "prisma@1.6.3"
   }
 }
