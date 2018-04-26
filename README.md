@@ -4,11 +4,12 @@ This repository contains the final project for the [**GraphQL.js tutorial**](htt
 
 ## Usage
 
-### 1. Clone repository
+### 1. Clone repository & install dependencies
 
 ```sh
 git clone https://github.com/howtographql/graphql-js
 cd graphql-js
+yarn install # or `npm install`
 ```
 
 ### 2. Deploy the Prisma database service
@@ -18,6 +19,8 @@ yarn prisma deploy
 ```
 
 When prompted where (i.e. to which _cluster_) you want to deploy your service, choose any of the public clusters, e.g. `public-us1` or `public-eu1`. (If you have Docker installed, you can also deploy locally.)
+
+> **Note**: This repository uses a slightly outdated version of the Prisma CLI and will be updated soon to use the [latest release](https://www.prisma.io/docs/reference/upgrade-guides/upgrading-prisma/upgrade-to-1.7-iquaecuj6b).
 
 ### 3. Set the Prisma service endpoint
 
@@ -62,6 +65,5 @@ Note that the part `public-hillcloak-flier-952361` of the URL is unique to _your
 To interact with the API in a GraphQL Playground, all you need to do is execute the `dev` script defined in `package.json`:
 
 ```sh
-yarn install
 yarn dev
 ```
