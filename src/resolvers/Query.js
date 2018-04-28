@@ -25,6 +25,7 @@ async function feed(parent, args, context, info) {
   return {
     count: linksConnection.aggregate.count,
     linkIds: queriedLinkes.map(link => link.id),
+    orderBy: args.orderBy
   }
 }
 
