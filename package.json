@@ -7,7 +7,8 @@
     "start": "node src/index.js",
     "dev": "npm-run-all --parallel start playground",
     "playground": "graphql playground",
-    "prisma": "prisma"
+    "prisma": "prisma",
+    "graphql": "graphql"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -16,6 +17,7 @@
     "prisma-binding": "^2.0.2"
   },
   "devDependencies": {
+    "graphql-cli": "^2.16.4",
     "npm-run-all": "^4.1.2",
     "prisma": "^1.9.0"
   }
