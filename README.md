@@ -18,9 +18,7 @@ yarn install # or `npm install`
 yarn prisma deploy
 ```
 
-When prompted where (i.e. to which _cluster_) you want to deploy your service, choose any of the public clusters, e.g. `public-us1` or `public-eu1`. (If you have Docker installed, you can also deploy locally.)
-
-> **Note**: This repository uses a slightly outdated version of the Prisma CLI and will be updated soon to use the [latest release](https://www.prisma.io/docs/reference/upgrade-guides/upgrading-prisma/upgrade-to-1.7-iquaecuj6b).
+You need to setup a Prisma service. You can refer to [this Qucikstart](https://www.prisma.io/docs/quickstart/) to lear how.
 
 ### 3. Set the Prisma service endpoint
 
@@ -35,7 +33,7 @@ const server = new GraphQLServer({
     db: new Prisma({
       typeDefs: 'src/generated/prisma.graphql',
       endpoint: "__PRISMA_ENDPOINT__",
-      secret: 'mysecret123',
+      debug: true
     }),
   }),
 })
@@ -52,7 +50,7 @@ const server = new GraphQLServer({
     db: new Prisma({
       typeDefs: 'src/generated/prisma.graphql',
       endpoint: "https://eu1.prisma.sh/public-hillcloak-flier-942261/hackernews-graphql-js/dev",
-      secret: 'mysecret123',
+      debug: true,
     }),
   }),
 })
