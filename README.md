@@ -18,7 +18,7 @@ yarn install # or `npm install`
 yarn prisma deploy
 ```
 
-You need to setup a Prisma service. You can refer to [this Qucikstart](https://www.prisma.io/docs/quickstart/) to lear how.
+You need to setup a Prisma service. You can refer to [this Quickstart](https://www.prisma.io/docs/quickstart/) to learn how.
 
 ### 3. Set the Prisma service endpoint
 
