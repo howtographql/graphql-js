@@ -1,23 +1,17 @@
-function newLinkSubscribe (parent, args, context, info) {
-  return context.db.subscription.link(
-    { where: { mutation_in: ['CREATED'] } },
-    info,
-  )
+function newLinkSubscribe(parent, args, context, info) {
+  return context.prisma.$subscribe.link({ mutation_in: ['CREATED'] }).node()
 }
 
 const newLink = {
-  subscribe: newLinkSubscribe
+  subscribe: newLinkSubscribe,
 }
 
-function newVoteSubscribe (parent, args, context, info) {
-  return context.db.subscription.vote(
-    { where: { mutation_in: ['CREATED'] } },
-    info,
-  )
+function newVoteSubscribe(parent, args, context, info) {
+  return context.prisma.$subscribe.vote({ mutation_in: ['CREATED'] }).node()
 }
 
 const newVote = {
-  subscribe: newVoteSubscribe
+  subscribe: newVoteSubscribe,
 }
 
 module.exports = {

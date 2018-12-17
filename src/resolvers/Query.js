@@ -1,4 +1,4 @@
-async function feed(parent, args, context, info) {
+async function feed(parent, args, context) {
   const where = args.filter
     ? {
         OR: [
@@ -8,7 +8,7 @@ async function feed(parent, args, context, info) {
       }
     : {}
 
-  const queriedLinkes = await context.db.query.links(
+  const queriedLinkes = await context.prisma.links(
     { where, skip: args.skip, first: args.first, orderBy: args.orderBy },
     `{ id }`,
   )
@@ -20,7 +20,7 @@ async function feed(parent, args, context, info) {
       }
     }
   `
-  const linksConnection = await context.db.query.linksConnection({}, countSelectionSet)
+  const linksConnection = await context.prisma.linksConnection({}, countSelectionSet)
 
   return {
     count: linksConnection.aggregate.count,

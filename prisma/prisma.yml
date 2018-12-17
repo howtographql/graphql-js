@@ -1,0 +1,9 @@
+datamodel: datamodel.prisma
+generate:
+  - generator: javascript-client
+    output: ../src/generated/prisma-client
+secret: mysecret123
+hooks:
+  post-deploy:
+    - prisma generate
+endpoint: https://eu1.prisma.sh/nikolas/hackernews-pc-overhaul/dev
