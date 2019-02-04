@@ -1,24 +1,14 @@
 {
   "name": "hackernews-node",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "npm-run-all --parallel start playground",
-    "playground": "graphql playground",
-    "prisma": "prisma",
-    "graphql": "graphql"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "graphql-yoga": "^1.7.0",
     "jsonwebtoken": "^8.2.0",
-    "prisma-binding": "^2.0.2"
-  },
-  "devDependencies": {
-    "graphql-cli": "^2.16.4",
-    "npm-run-all": "^4.1.2",
-    "prisma": "^1.9.0"
+    "prisma-client-lib": "^1.22.2"
   }
 }
