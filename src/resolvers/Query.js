@@ -7,6 +7,7 @@ async function feed(parent, args, context) {
           { url_contains: args.filter },
         ],
       },
+      skip: args.skip,
     })
     .aggregate()
     .count()
