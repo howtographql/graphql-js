@@ -18,6 +18,8 @@ yarn install # or `npm install`
 yarn global add prisma
 ```
 
+You need to setup a Prisma service. You can refer to [this Quickstart](https://www.prisma.io/docs/quickstart/) to learn how.
+
 ### 3. Deploy the Prisma database service
 
 ```sh
