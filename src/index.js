@@ -6,6 +6,9 @@ const Subscription = require('./resolvers/Subscription')
 const User = require('./resolvers/User')
 const Link = require('./resolvers/Link')
 const Vote = require('./resolvers/Vote')
+const { PubSub } = require('graphql-yoga')
+
+const pubsub = new PubSub()
 
 const prisma = new PrismaClient({
   errorFormat: 'minimal',
@@ -27,6 +30,7 @@ const server = new GraphQLServer({
     return {
       ...request,
       prisma,
+      pubsub
     }
   },
 })
