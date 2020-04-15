@@ -8,19 +8,13 @@ async function feed(parent, args, context) {
       }
     : {}
 
-  const links = await context.prisma.links({
+  const links = await context.prisma.link.findMany({
     where,
     skip: args.skip,
     first: args.first,
     orderBy: args.orderBy,
   })
-  const count = await context.prisma
-    .linksConnection({
-      where,
-      skip: args.skip,
-    })
-    .aggregate()
-    .count()
+  const count = await context.prisma.link.count({ where })
   return {
     links,
     count,

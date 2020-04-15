@@ -4,16 +4,18 @@ const { APP_SECRET, getUserId } = require('../utils')
 
 function post(parent, args, context, info) {
   const userId = getUserId(context)
-  return context.prisma.createLink({
-    url: args.url,
-    description: args.description,
-    postedBy: { connect: { id: userId } },
+  return context.prisma.link.create({
+    data: {
+      url: args.url,
+      description: args.description,
+      postedBy: { connect: { id: userId } },
+    }
   })
 }
 
 async function signup(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10)
-  const user = await context.prisma.createUser({ ...args, password })
+  const user = await context.prisma.user.create({ data: { ...args, password } })
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
 
@@ -24,7 +26,7 @@ async function signup(parent, args, context, info) {
 }
 
 async function login(parent, args, context, info) {
-  const user = await context.prisma.user({ email: args.email })
+  const user = await context.prisma.user.findOne({ where: { email: args.email } })
   if (!user) {
     throw new Error('No such user found')
   }
@@ -44,17 +46,24 @@ async function login(parent, args, context, info) {
 
 async function vote(parent, args, context, info) {
   const userId = getUserId(context)
-  const linkExists = await context.prisma.$exists.vote({
-    user: { id: userId },
-    link: { id: args.linkId },
+  const vote = await context.prisma.vote.findOne({
+    where: {
+      linkId_userId: {
+        linkId: Number(args.linkId),
+        userId: userId
+      }
+    }
   })
-  if (linkExists) {
+
+  if (Boolean(vote)) {
     throw new Error(`Already voted for link: ${args.linkId}`)
   }
 
-  return context.prisma.createVote({
-    user: { connect: { id: userId } },
-    link: { connect: { id: args.linkId } },
+  return context.prisma.vote.create({
+    data: {
+      user: { connect: { id: userId } },
+      link: { connect: { id: Number(args.linkId) } },
+    }
   })
 }
 
