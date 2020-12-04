@@ -1,5 +1,5 @@
 function links(parent, args, context) {
-  return context.prisma.user.findOne({ where: { id: parent.id } }).links()
+  return context.prisma.user.findUnique({ where: { id: parent.id } }).links()
 }
 
 module.exports = {
